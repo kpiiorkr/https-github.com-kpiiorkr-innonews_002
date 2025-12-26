@@ -25,13 +25,13 @@ const Footer: React.FC = () => {
             </ul>
 
             <div className="text-xs text-gray-500 leading-relaxed space-y-1">
-              <p>본사 : 서울특별시 영등포구 (우 07238) : TEL : (02) 123-4567</p>
-              <p>한국프로세스혁신협회 산하 미디어 사업부</p>
-              <p>인터넷신문등록번호 : 서울, 아00123 등록일자 : 2024.01.01 발행인 : 김혁신, 편집인 : 이노베이션</p>
+              <p>한국프로세스혁신협회 : (05030) 서울시 광진구 자양강변길 115, STA타워</p>
+              <p>한국프로세스혁신협회 산하 미디어사업부</p>
+              <p>등록일자 : 2025.12.26 발행인 : 강승원, 편집인 : 한국프로세스혁신협회</p>
             </div>
             
             <p className="mt-6 text-xs text-gray-400 uppercase tracking-widest">
-              Copyright ⓒ INNO NEWS, All rights reserved
+              Copyright ⓒ INNO NEWS(한국프로세스혁신협회), All rights reserved
             </p>
           </div>
         </div>
