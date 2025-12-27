@@ -10,6 +10,7 @@ import ReportPage from './pages/ReportPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import VideosPage from './pages/VideosPage';
+import InfoPage from './pages/InfoPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAdmin } = useApp();
@@ -25,6 +26,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/category/:categoryName" element={<Layout><CategoryPage /></Layout>} />
       <Route path="/report" element={<Layout><ReportPage /></Layout>} />
       <Route path="/videos" element={<Layout><VideosPage /></Layout>} />
+      <Route path="/info/:type" element={<Layout><InfoPage /></Layout>} />
       <Route path="/login" element={<Layout><AdminLogin /></Layout>} />
       <Route path="/admin" element={
         <ProtectedRoute>
