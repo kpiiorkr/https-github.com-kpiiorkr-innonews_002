@@ -49,16 +49,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       createdAt: '2024-05-19 10:20',
       updatedAt: '2024-05-19 11:00',
       reporterId: 'rep2'
-    },
-    {
-      id: '3',
-      title: '[오피니언] 이노베이션의 본질은 기술이 아닌 사람이다',
-      category: '오피니언',
-      content: '우리는 매일 수많은 기술 혁신 속에서 살아간다. 하지만 진정한 혁신의 중심에는 항상 그 기술을 사용하는 사람이 있어야 함을 잊지 말아야 한다...',
-      image: 'https://picsum.photos/seed/opinion1/800/500',
-      createdAt: '2024-05-18 08:00',
-      updatedAt: '2024-05-18 08:00',
-      reporterId: 'rep1'
     }
   ]);
 
@@ -69,30 +59,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       description: '이노뉴스 창간을 기념하여 국내 최고의 전문가들과 함께 미래 프로세스 혁신에 대해 이야기 나누었습니다. 자세한 내용은 공식 홈페이지 https://innonews.co.kr 에서 확인하세요.',
       youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailType: 'default'
-    },
-    {
-      id: 'v2',
-      title: '기술 혁신의 현장을 가다',
-      description: '국내 주요 스마트 팩토리 현장을 직접 방문하여 기술 혁신의 현재와 미래를 조망했습니다. 협회 소식은 https://askinno.com 을 참고해주세요.',
-      youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      thumbnailType: 'text',
-      thumbnailText: '혁신 현장 스케치'
     }
   ]);
 
   const [ads, setAds] = useState<AdConfig[]>([
     {
-      id: 'ad1',
+      id: 'ad-side-1',
       type: 'sidebar',
-      imageUrl: 'https://picsum.photos/seed/ad_side/160/600',
+      imageUrl: 'https://picsum.photos/seed/ad1/160/600',
       linkUrl: 'https://askinno.com',
       isVisible: true
     },
     {
-      id: 'ad2',
+      id: 'ad-top-1',
       type: 'top',
-      imageUrl: 'https://picsum.photos/seed/ad_top/728/90',
+      imageUrl: 'https://picsum.photos/seed/ad2/728/90',
       linkUrl: 'https://www.google.com',
+      isVisible: true
+    },
+    {
+      id: 'ad-pop-1',
+      type: 'popup',
+      imageUrl: 'https://i.pinimg.com/736x/23/72/7d/23727dffcc8b9ab9f954992d13c6eeb6.jpg',
+      linkUrl: '#',
+      isVisible: true
+    },
+    {
+      id: 'ad-pop-2',
+      type: 'popup',
+      imageUrl: 'https://picsum.photos/seed/pop2/500/500',
+      linkUrl: '#',
       isVisible: true
     }
   ]);

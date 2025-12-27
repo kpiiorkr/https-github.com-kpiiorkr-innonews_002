@@ -31,7 +31,7 @@ export interface Video {
 
 export interface AdConfig {
   id: string;
-  type: 'sidebar' | 'top';
+  type: 'sidebar' | 'top' | 'popup';
   imageUrl: string;
   linkUrl: string;
   width?: string;
