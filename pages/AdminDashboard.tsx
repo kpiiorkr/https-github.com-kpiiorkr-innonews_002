@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
 import { useApp } from '../store';
-import { Article, Category, Video, AdConfig } from '../types';
-import { Plus, Trash2, Edit2, Settings, FileText, Video as VideoIcon, Image as ImageIcon, MessageSquare, Key, LayoutGrid, ExternalLink } from 'lucide-react';
+import { Article, Category, AdConfig } from '../types';
+import { Plus, Trash2, Edit2, Settings, FileText, Image as ImageIcon, MessageSquare, Key, LayoutGrid, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard: React.FC = () => {
-  const { articles, addArticle, videos, ads, reports, reporters, adminPassword, updateAdminPassword, navCategories, updateNavCategories } = useApp();
-  const [activeTab, setActiveTab] = useState<'articles' | 'videos' | 'ads' | 'reports' | 'password' | 'categories'>('articles');
+  const { articles, addArticle, ads, reports, reporters, adminPassword, updateAdminPassword, navCategories, updateNavCategories } = useApp();
+  const [activeTab, setActiveTab] = useState<'articles' | 'ads' | 'reports' | 'password' | 'categories'>('articles');
   const navigate = useNavigate();
 
   // Password change state
@@ -26,13 +26,13 @@ const AdminDashboard: React.FC = () => {
 
   const handleAddArticle = (e: React.FormEvent) => {
     e.preventDefault();
-    const article: Article = {
+    const article = {
       id: Math.random().toString(36).substr(2, 9),
       ...newArticle,
       createdAt: new Date().toLocaleString(),
       updatedAt: new Date().toLocaleString(),
     };
-    addArticle(article);
+    addArticle(article as any);
     setNewArticle({ title: '', category: '기술', content: '', image: '', reporterId: 'rep1' });
     alert('기사가 등록되었습니다.');
   };
@@ -68,12 +68,6 @@ const AdminDashboard: React.FC = () => {
             <FileText size={16} /> 기사 관리
           </button>
           <button 
-            onClick={() => setActiveTab('videos')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all text-sm ${activeTab === 'videos' ? 'bg-blue-900 text-white shadow-lg' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'}`}
-          >
-            <VideoIcon size={16} /> 영상 관리
-          </button>
-          <button 
             onClick={() => setActiveTab('categories')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all text-sm ${activeTab === 'categories' ? 'bg-blue-900 text-white shadow-lg' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'}`}
           >
@@ -96,6 +90,12 @@ const AdminDashboard: React.FC = () => {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all text-sm ${activeTab === 'password' ? 'bg-blue-900 text-white shadow-lg' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'}`}
           >
             <Key size={16} /> 비밀번호 변경
+          </button>
+          <button 
+            onClick={() => navigate('/videos')}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-100 text-sm"
+          >
+            <ExternalLink size={16} /> 영상 메뉴 바로가기
           </button>
         </div>
 
@@ -185,6 +185,16 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
+        {/* Ads Management */}
+        {activeTab === 'ads' && (
+           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+             <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+               <ImageIcon size={20} className="text-blue-600" /> 광고 관리
+             </h2>
+             <div className="text-center py-10 text-gray-400">광고 구성 옵션을 준비 중입니다.</div>
+           </div>
+        )}
+
         {/* Password Change */}
         {activeTab === 'password' && (
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm max-w-lg mx-auto">
@@ -206,21 +216,6 @@ const AdminDashboard: React.FC = () => {
               </div>
               <button type="submit" className="w-full py-3 bg-red-600 text-white font-bold rounded hover:bg-red-700">비밀번호 변경 저장</button>
             </form>
-          </div>
-        )}
-
-        {/* Video Management Placeholder - Now points to the page as requested */}
-        {activeTab === 'videos' && (
-          <div className="bg-white p-12 rounded-xl border border-gray-200 shadow-sm text-center">
-            <VideoIcon size={48} className="mx-auto text-gray-300 mb-4" />
-            <h2 className="text-xl font-bold mb-2">영상 관리는 영상 메뉴에서 직접 가능합니다</h2>
-            <p className="text-gray-500 mb-6">영상 페이지로 이동하여 영상별 수정/삭제 버튼을 이용하세요.</p>
-            <button 
-              onClick={() => navigate('/videos')}
-              className="px-6 py-3 bg-blue-900 text-white font-bold rounded flex items-center gap-2 mx-auto hover:bg-blue-800"
-            >
-              <ExternalLink size={18} /> 영상 관리 페이지로 이동
-            </button>
           </div>
         )}
 
