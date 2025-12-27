@@ -22,6 +22,7 @@ export interface Article {
 export interface Video {
   id: string;
   title: string;
+  description?: string;
   youtubeUrl: string;
   thumbnailType: 'default' | 'image' | 'text';
   customThumbnail?: string;

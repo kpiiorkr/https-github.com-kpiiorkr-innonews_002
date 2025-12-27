@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../store';
 import { Article, Category, Video, AdConfig } from '../types';
-import { Plus, Trash2, Edit2, Settings, FileText, Video as VideoIcon, Image as ImageIcon, MessageSquare, Key, LayoutGrid } from 'lucide-react';
+import { Plus, Trash2, Edit2, Settings, FileText, Video as VideoIcon, Image as ImageIcon, MessageSquare, Key, LayoutGrid, ExternalLink } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard: React.FC = () => {
   const { articles, addArticle, videos, ads, reports, reporters, adminPassword, updateAdminPassword, navCategories, updateNavCategories } = useApp();
   const [activeTab, setActiveTab] = useState<'articles' | 'videos' | 'ads' | 'reports' | 'password' | 'categories'>('articles');
+  const navigate = useNavigate();
 
   // Password change state
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
@@ -207,19 +209,18 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Video Management Placeholder */}
+        {/* Video Management Placeholder - Now points to the page as requested */}
         {activeTab === 'videos' && (
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h2 className="text-xl font-bold mb-6">영상 뉴스 관리</h2>
-            <div className="grid grid-cols-1 gap-4">
-              {videos.map(v => (
-                <div key={v.id} className="flex gap-4 p-3 border rounded items-center">
-                  <div className="font-bold">{v.title}</div>
-                  <div className="flex-grow text-xs text-blue-600">{v.youtubeUrl}</div>
-                  <button className="text-red-500"><Trash2 size={16} /></button>
-                </div>
-              ))}
-            </div>
+          <div className="bg-white p-12 rounded-xl border border-gray-200 shadow-sm text-center">
+            <VideoIcon size={48} className="mx-auto text-gray-300 mb-4" />
+            <h2 className="text-xl font-bold mb-2">영상 관리는 영상 메뉴에서 직접 가능합니다</h2>
+            <p className="text-gray-500 mb-6">영상 페이지로 이동하여 영상별 수정/삭제 버튼을 이용하세요.</p>
+            <button 
+              onClick={() => navigate('/videos')}
+              className="px-6 py-3 bg-blue-900 text-white font-bold rounded flex items-center gap-2 mx-auto hover:bg-blue-800"
+            >
+              <ExternalLink size={18} /> 영상 관리 페이지로 이동
+            </button>
           </div>
         )}
 

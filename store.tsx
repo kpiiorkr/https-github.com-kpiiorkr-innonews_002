@@ -18,6 +18,8 @@ interface AppContextType {
   addReport: (report: Report) => void;
   updateAds: (ads: AdConfig[]) => void;
   updateVideos: (videos: Video[]) => void;
+  addVideo: (video: Video) => void;
+  deleteVideo: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -64,12 +66,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     {
       id: 'v1',
       title: '이노뉴스 창간 기념 대담 - 미래의 프로세스',
+      description: '이노뉴스 창간을 기념하여 국내 최고의 전문가들과 함께 미래 프로세스 혁신에 대해 이야기 나누었습니다. 자세한 내용은 공식 홈페이지 https://innonews.co.kr 에서 확인하세요.',
       youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailType: 'default'
     },
     {
       id: 'v2',
       title: '기술 혁신의 현장을 가다',
+      description: '국내 주요 스마트 팩토리 현장을 직접 방문하여 기술 혁신의 현재와 미래를 조망했습니다. 협회 소식은 https://askinno.com 을 참고해주세요.',
       youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailType: 'text',
       thumbnailText: '혁신 현장 스케치'
@@ -103,7 +107,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addArticle = (article: Article) => setArticles(prev => [article, ...prev]);
   const addReport = (report: Report) => setReports(prev => [report, ...prev]);
   const updateAds = (newAds: AdConfig[]) => setAds(newAds);
+  
   const updateVideos = (newVideos: Video[]) => setVideos(newVideos);
+  const addVideo = (video: Video) => setVideos(prev => [video, ...prev]);
+  const deleteVideo = (id: string) => setVideos(prev => prev.filter(v => v.id !== id));
+
   const updateAdminPassword = (newPw: string) => setAdminPassword(newPw);
   const updateNavCategories = (newCats: string[]) => setNavCategories(newCats);
 
@@ -123,7 +131,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       addArticle,
       addReport,
       updateAds,
-      updateVideos
+      updateVideos,
+      addVideo,
+      deleteVideo
     }}>
       {children}
     </AppContext.Provider>
