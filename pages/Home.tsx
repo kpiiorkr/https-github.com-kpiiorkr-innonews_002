@@ -68,7 +68,7 @@ const Home: React.FC = () => {
                 onClick={handleClosePopup} 
                 className="text-sm font-bold text-blue-900 hover:text-blue-700"
               >
-                {currentPopupIdx < popupAds.length - 1 ? '다음 광고 보기' : '닫기'}
+                {currentPopupIdx < popupAds.length - 1 ? '현재 광고 닫기' : '닫기'}
               </button>
             </div>
           </div>
