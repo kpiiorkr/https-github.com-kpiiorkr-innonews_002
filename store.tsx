@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Article, Video, AdConfig, Reporter, Report } from './types';
 
 interface AppContextType {
@@ -8,8 +8,12 @@ interface AppContextType {
   ads: AdConfig[];
   reporters: Reporter[];
   reports: Report[];
+  navCategories: string[];
   isAdmin: boolean;
+  adminPassword: string;
   setAdmin: (val: boolean) => void;
+  updateAdminPassword: (newPw: string) => void;
+  updateNavCategories: (newCats: string[]) => void;
   addArticle: (article: Article) => void;
   addReport: (report: Report) => void;
   updateAds: (ads: AdConfig[]) => void;
@@ -20,6 +24,9 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('pw');
+  const [navCategories, setNavCategories] = useState(['오피니언', '최신기사', '기술', '경영', '사회', '문화']);
+  
   const [articles, setArticles] = useState<Article[]>([
     {
       id: '1',
@@ -97,6 +104,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const addReport = (report: Report) => setReports(prev => [report, ...prev]);
   const updateAds = (newAds: AdConfig[]) => setAds(newAds);
   const updateVideos = (newVideos: Video[]) => setVideos(newVideos);
+  const updateAdminPassword = (newPw: string) => setAdminPassword(newPw);
+  const updateNavCategories = (newCats: string[]) => setNavCategories(newCats);
 
   return (
     <AppContext.Provider value={{
@@ -105,8 +114,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ads,
       reporters,
       reports,
+      navCategories,
       isAdmin,
+      adminPassword,
       setAdmin: setIsAdmin,
+      updateAdminPassword,
+      updateNavCategories,
       addArticle,
       addReport,
       updateAds,

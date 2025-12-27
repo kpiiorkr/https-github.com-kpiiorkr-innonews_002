@@ -7,12 +7,12 @@ import { Lock } from 'lucide-react';
 const AdminLogin: React.FC = () => {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
-  const { setAdmin } = useApp();
+  const { setAdmin, adminPassword } = useApp();
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (id === 'admin' && pw === 'admin') {
+    if (id === 'admin' && pw === adminPassword) {
       setAdmin(true);
       navigate('/admin');
     } else {
@@ -44,7 +44,7 @@ const AdminLogin: React.FC = () => {
             <input 
               type="password" value={pw} onChange={(e) => setPw(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="admin"
+              placeholder="패스워드를 입력하세요"
             />
           </div>
           <button 

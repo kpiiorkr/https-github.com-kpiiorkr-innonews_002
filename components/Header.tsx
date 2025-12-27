@@ -6,10 +6,8 @@ import { useApp } from '../store';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAdmin, setAdmin } = useApp();
+  const { isAdmin, setAdmin, navCategories } = useApp();
   const navigate = useNavigate();
-
-  const categories = ['오피니언', '최신기사', '기술', '경영', '사회', '문화', '영상', '제보하기'];
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -48,10 +46,10 @@ const Header: React.FC = () => {
         {/* Navigation */}
         <nav className={`md:flex ${isMenuOpen ? 'block' : 'hidden'} bg-white`}>
           <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 py-3 font-medium text-gray-700">
-            {categories.map((cat) => (
+            {navCategories.map((cat) => (
               <li key={cat}>
                 <Link 
-                  to={cat === '영상' ? '/videos' : cat === '제보하기' ? '/report' : `/category/${cat}`}
+                  to={`/category/${cat}`}
                   className="hover:text-blue-600 transition-colors block py-2 md:py-0"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -59,6 +57,8 @@ const Header: React.FC = () => {
                 </Link>
               </li>
             ))}
+            <li><Link to="/videos" className="hover:text-blue-600 transition-colors block py-2 md:py-0" onClick={() => setIsMenuOpen(false)}>영상</Link></li>
+            <li><Link to="/report" className="hover:text-blue-600 transition-colors block py-2 md:py-0 font-bold" onClick={() => setIsMenuOpen(false)}>제보하기</Link></li>
           </ul>
         </nav>
       </div>

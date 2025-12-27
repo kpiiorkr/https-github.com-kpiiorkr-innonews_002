@@ -39,19 +39,31 @@ const ReportPage: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      addReport({
-        id: Math.random().toString(36).substr(2, 9),
-        ...formData,
-        fileName: file?.name,
-        submittedAt: new Date().toLocaleString()
-      });
-      alert('제보가 성공적으로 접수되었습니다. 감사합니다.');
-      setFormData({ name: '', email: '', phone: '', title: '', content: '', agree: false });
-      setFile(null);
-      setIsSubmitting(false);
-    }, 1000);
+    
+    // Create the mailto link content
+    const subject = encodeURIComponent(`[이노뉴스 제보] ${formData.title}`);
+    const body = encodeURIComponent(
+      `제보자명: ${formData.name}\n` +
+      `연락처: ${formData.phone}\n` +
+      `이메일: ${formData.email}\n\n` +
+      `[내용]\n${formData.content}`
+    );
+    
+    // Simulate API storage
+    addReport({
+      id: Math.random().toString(36).substr(2, 9),
+      ...formData,
+      fileName: file?.name,
+      submittedAt: new Date().toLocaleString()
+    });
+
+    // Trigger the email client
+    window.location.href = `mailto:ai@aag.co.kr?subject=${subject}&body=${body}`;
+
+    alert('제보 내용이 저장되었으며, 메일 발송 화면으로 연결합니다. 전송 버튼을 눌러주세요.');
+    setFormData({ name: '', email: '', phone: '', title: '', content: '', agree: false });
+    setFile(null);
+    setIsSubmitting(false);
   };
 
   return (
