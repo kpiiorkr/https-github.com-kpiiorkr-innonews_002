@@ -44,7 +44,6 @@ export const TopAd: React.FC = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto mb-10">
-      <div className="text-center text-[10px] text-gray-400 mb-1 tracking-widest uppercase">Sponsored</div>
       <div className="w-full bg-gray-50 flex items-center justify-center border border-gray-100 relative group overflow-hidden">
         <a href={activeAd.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-[120px] md:h-[150px]">
           <img 
@@ -73,7 +72,6 @@ export const BottomAd: React.FC = () => {
   return (
     <div className="mt-12 mb-12 clear-both block w-full">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center text-[10px] text-gray-400 mb-1 tracking-widest uppercase">Advertisement</div>
         <div className="w-full bg-gray-50 flex items-center justify-center border border-gray-100 relative group overflow-hidden">
           <a href={activeAd.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-[120px] md:h-[150px]">
             <img 

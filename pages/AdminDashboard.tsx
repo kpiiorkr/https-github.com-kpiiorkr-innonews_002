@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../store';
 import { Article, Category, AdConfig, Reporter } from '../types';
-import { Plus, Trash2, Edit2, Settings, FileText, Image as ImageIcon, MessageSquare, Key, LayoutGrid, Users, UserPlus, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Trash2, Edit2, Settings, FileText, Image as ImageIcon, MessageSquare, Key, LayoutGrid, Users, UserPlus, ArrowUp, ArrowDown, LayoutTemplate } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const { 
@@ -54,7 +54,7 @@ const AdminDashboard: React.FC = () => {
     };
     addArticle(article as any);
     setNewArticle({ title: '', category: navCategories[0] as Category, content: '', image: '', reporterId: reporters[0]?.id || '' });
-    alert('기사가 등록되었습니다. 순서 조정을 통해 배치를 변경하세요.');
+    alert('새 기사가 등록되었습니다. 아래 배치 관리 목록에서 순서를 조정하여 첫 화면 노출을 관리하세요.');
   };
 
   const handleAddCategory = () => {
@@ -137,7 +137,7 @@ const AdminDashboard: React.FC = () => {
 
         <div className="flex flex-wrap gap-2 mb-8">
           {[
-            { id: 'articles', icon: FileText, label: '기사 & 배치' },
+            { id: 'articles', icon: LayoutTemplate, label: '첫 화면 기사 배치' },
             { id: 'reporters', icon: Users, label: '기자 관리' },
             { id: 'categories', icon: LayoutGrid, label: '메뉴 관리' },
             { id: 'ads', icon: ImageIcon, label: '광고 관리' },
@@ -154,7 +154,96 @@ const AdminDashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* 기자 관리 탭 복원 */}
+        {activeTab === 'articles' && (
+          <div className="space-y-8 animate-in fade-in duration-300">
+            {/* 첫 화면 배치 관리를 최상단으로 이동 */}
+            <section className="bg-white p-8 rounded-xl border border-blue-100 shadow-md ring-1 ring-blue-50">
+              <div className="flex items-center gap-2 mb-6">
+                <LayoutTemplate className="text-blue-900" size={24} />
+                <h2 className="text-xl font-black text-gray-900 uppercase">첫 화면 기사 배치 관리</h2>
+              </div>
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <p className="text-sm text-blue-900 font-medium leading-relaxed">
+                  순서를 조정하여 홈페이지 첫 화면의 노출 구성을 관리하세요.<br/>
+                  <span className="font-bold">1위</span>: 메인 대형 뉴스 | <span className="font-bold">2~4위</span>: 우측 추천 리스트 | <span className="font-bold">5~7위</span>: 중간 그리드 섹션
+                </p>
+              </div>
+              <div className="divide-y divide-gray-100 border rounded-lg overflow-hidden bg-white">
+                {articles.map((art, idx) => (
+                  <div key={art.id} className={`py-4 px-4 flex items-center gap-4 group transition-colors ${idx === 0 ? 'bg-blue-50/30' : 'hover:bg-gray-50'}`}>
+                    <div className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-black shadow-sm border ${idx === 0 ? 'bg-blue-900 text-white border-blue-900' : 'bg-white text-gray-400 border-gray-200'}`}>
+                      {idx + 1}
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <div className="font-bold text-sm text-gray-900 truncate max-w-lg">{art.title}</div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-500 font-bold">{art.category}</span>
+                        <span className="text-[10px] text-gray-400">{art.createdAt}</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      <button onClick={() => moveArticle(idx, 'up')} disabled={idx === 0} className="p-2 border rounded-md hover:bg-blue-50 disabled:opacity-10 text-blue-900 bg-white"><ArrowUp size={16}/></button>
+                      <button onClick={() => moveArticle(idx, 'down')} disabled={idx === articles.length - 1} className="p-2 border rounded-md hover:bg-blue-50 disabled:opacity-10 text-blue-900 bg-white"><ArrowDown size={16}/></button>
+                      <button onClick={() => { if(confirm('기사를 삭제하시겠습니까?')) updateArticles(articles.filter(a => a.id !== art.id)) }} className="p-2 border rounded-md hover:bg-red-50 text-red-500 ml-2 bg-white"><Trash2 size={16}/></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 기사 발행 섹션은 하단으로 */}
+            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <Plus size={20} className="text-gray-400" /> 신규 기사 발행
+              </h2>
+              <form onSubmit={handleAddArticle} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold mb-1 uppercase text-gray-400">제목</label>
+                    <input type="text" required value={newArticle.title} onChange={e => setNewArticle({...newArticle, title: e.target.value})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold mb-1 uppercase text-gray-400">카테고리</label>
+                    <select value={newArticle.category} onChange={e => setNewArticle({...newArticle, category: e.target.value as Category})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none">
+                      {navCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold mb-1 uppercase text-gray-400">메인 썸네일 URL</label>
+                    <input type="text" placeholder="https://..." value={newArticle.image} onChange={e => setNewArticle({...newArticle, image: e.target.value})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold mb-1 uppercase text-gray-400">담당 기자</label>
+                    <select value={newArticle.reporterId} onChange={e => setNewArticle({...newArticle, reporterId: e.target.value})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none">
+                      <option value="">기자 선택</option>
+                      {reporters.map(r => <option key={r.id} value={r.id}>{r.name} ({r.role})</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-400">본문 내용</label>
+                    <button type="button" onClick={insertImageTag} className="text-[11px] bg-blue-50 text-blue-900 px-3 py-1.5 rounded-md hover:bg-blue-100 flex items-center gap-1.5 border border-blue-200 transition-colors font-bold shadow-sm">
+                      <ImageIcon size={14} /> 본문 내 이미지 삽입
+                    </button>
+                  </div>
+                  <textarea required rows={10} value={newArticle.content} onChange={e => setNewArticle({...newArticle, content: e.target.value})} className="w-full p-3 border rounded focus:ring-1 focus:ring-blue-900 outline-none font-light leading-relaxed"></textarea>
+                  <div className="mt-2 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
+                    <p className="text-[11px] text-blue-800 font-bold mb-1">💡 이미지 삽입 사용법</p>
+                    <p className="text-[11px] text-gray-500 leading-normal">
+                      1. 위 버튼을 눌러 이미지 URL을 입력하면 본문에 [IMG:URL] 코드가 추가됩니다.<br/>
+                      2. 이 코드는 기사가 발행된 후 상세페이지에서 실제 이미지로 자동 변환됩니다.
+                    </p>
+                  </div>
+                </div>
+                <button type="submit" className="w-full py-4 bg-blue-900 text-white font-black uppercase tracking-widest rounded-lg shadow-lg hover:bg-black transition-all">기사 발행</button>
+              </form>
+            </section>
+          </div>
+        )}
+
         {activeTab === 'reporters' && (
           <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-300">
             <div className="flex justify-between items-center mb-6">
@@ -184,10 +273,9 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* 보안 설정 탭 복원 */}
         {activeTab === 'password' && (
           <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm max-w-md animate-in fade-in duration-300">
-            <h2 className="text-xl font-bold mb-6">관리자 보안 설정</h2>
+            <h2 className="text-xl font-bold mb-6 text-gray-900">관리자 보안 설정</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">현재 비밀번호</label>
@@ -221,16 +309,15 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* 카테고리 관리 */}
         {activeTab === 'categories' && (
           <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-300">
-            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">상단 메뉴 설정</h2>
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">상단 메뉴 구성</h2>
             <div className="flex gap-2 mb-8">
               <input 
                 type="text" 
                 value={newCategoryName} 
                 onChange={e => setNewCategoryName(e.target.value)}
-                placeholder="새 메뉴 이름 입력"
+                placeholder="추가할 메뉴 이름 입력"
                 className="flex-grow p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none"
               />
               <button onClick={handleAddCategory} className="bg-blue-900 text-white px-6 py-3 rounded-lg font-bold">추가</button>
@@ -240,9 +327,9 @@ const AdminDashboard: React.FC = () => {
                 <div key={cat} className="flex items-center justify-between p-4 border rounded-lg bg-gray-50 group">
                   <span className="font-bold text-gray-700">{cat}</span>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => moveCategory(idx, 'up')} disabled={idx === 0} className="p-2 text-gray-400 hover:text-blue-900 disabled:opacity-20"><ArrowUp size={18}/></button>
-                    <button onClick={() => moveCategory(idx, 'down')} disabled={idx === navCategories.length - 1} className="p-2 text-gray-400 hover:text-blue-900 disabled:opacity-20"><ArrowDown size={18}/></button>
-                    <button onClick={() => handleDeleteCategory(cat)} className="p-2 text-red-400 hover:text-red-600 ml-4"><Trash2 size={18}/></button>
+                    <button onClick={() => moveCategory(idx, 'up')} disabled={idx === 0} className="p-2 text-gray-400 hover:text-blue-900 disabled:opacity-20 bg-white border rounded"><ArrowUp size={18}/></button>
+                    <button onClick={() => moveCategory(idx, 'down')} disabled={idx === navCategories.length - 1} className="p-2 text-gray-400 hover:text-blue-900 disabled:opacity-20 bg-white border rounded"><ArrowDown size={18}/></button>
+                    <button onClick={() => handleDeleteCategory(cat)} className="p-2 text-red-400 hover:text-red-600 ml-4 bg-white border rounded"><Trash2 size={18}/></button>
                   </div>
                 </div>
               ))}
@@ -250,81 +337,6 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* 기사 관리 */}
-        {activeTab === 'articles' && (
-          <div className="space-y-8 animate-in fade-in duration-300">
-            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-              <h2 className="text-xl font-bold mb-6">신규 기사 발행</h2>
-              <form onSubmit={handleAddArticle} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold mb-1 uppercase text-gray-400">제목</label>
-                    <input type="text" required value={newArticle.title} onChange={e => setNewArticle({...newArticle, title: e.target.value})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold mb-1 uppercase text-gray-400">카테고리</label>
-                    <select value={newArticle.category} onChange={e => setNewArticle({...newArticle, category: e.target.value as Category})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none">
-                      {navCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold mb-1 uppercase text-gray-400">메인 썸네일 URL</label>
-                  <input type="text" placeholder="https://..." value={newArticle.image} onChange={e => setNewArticle({...newArticle, image: e.target.value})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold mb-1 uppercase text-gray-400">담당 기자</label>
-                  <select value={newArticle.reporterId} onChange={e => setNewArticle({...newArticle, reporterId: e.target.value})} className="w-full p-2.5 border rounded focus:ring-1 focus:ring-blue-900 outline-none">
-                    <option value="">기자 선택</option>
-                    {reporters.map(r => <option key={r.id} value={r.id}>{r.name} ({r.role})</option>)}
-                  </select>
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="block text-xs font-bold uppercase text-gray-400">본문 내용</label>
-                    <button type="button" onClick={insertImageTag} className="text-[11px] bg-blue-50 text-blue-900 px-3 py-1.5 rounded-md hover:bg-blue-100 flex items-center gap-1.5 border border-blue-200 transition-colors font-bold shadow-sm">
-                      <ImageIcon size={14} /> 본문 내 이미지 삽입
-                    </button>
-                  </div>
-                  <textarea required rows={10} value={newArticle.content} onChange={e => setNewArticle({...newArticle, content: e.target.value})} className="w-full p-3 border rounded focus:ring-1 focus:ring-blue-900 outline-none font-light leading-relaxed"></textarea>
-                  <div className="mt-2 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
-                    <p className="text-[11px] text-blue-800 font-bold mb-1">💡 이미지 삽입 사용법</p>
-                    <p className="text-[11px] text-gray-500 leading-normal">
-                      1. 위 버튼을 눌러 이미지 URL을 입력하면 본문에 [IMG:URL] 코드가 추가됩니다.<br/>
-                      2. 이 코드는 기사가 발행된 후 상세페이지에서 실제 이미지로 자동 변환됩니다.
-                    </p>
-                  </div>
-                </div>
-                <button type="submit" className="w-full py-4 bg-blue-900 text-white font-black uppercase tracking-widest rounded-lg shadow-lg hover:bg-black transition-all">기사 발행</button>
-              </form>
-            </section>
-
-            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-              <h2 className="text-xl font-bold mb-6 flex items-center justify-between">
-                <span>기사 배치 및 순서 관리</span>
-                <span className="text-xs font-normal text-gray-400 italic">가장 위에 있는 기사가 메인에 강조 노출됩니다.</span>
-              </h2>
-              <div className="divide-y divide-gray-100">
-                {articles.map((art, idx) => (
-                  <div key={art.id} className="py-4 flex items-center gap-4 group">
-                    <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded text-xs font-bold text-gray-500">{idx + 1}</div>
-                    <div className="flex-grow">
-                      <div className="font-bold text-sm text-gray-900 group-hover:text-blue-900 transition-colors truncate max-w-lg">{art.title}</div>
-                      <div className="text-[10px] text-gray-400">{art.category} | {art.createdAt}</div>
-                    </div>
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => moveArticle(idx, 'up')} disabled={idx === 0} className="p-2 border rounded hover:bg-blue-50 disabled:opacity-10 text-blue-900"><ArrowUp size={16}/></button>
-                      <button onClick={() => moveArticle(idx, 'down')} disabled={idx === articles.length - 1} className="p-2 border rounded hover:bg-blue-50 disabled:opacity-10 text-blue-900"><ArrowDown size={16}/></button>
-                      <button onClick={() => { if(confirm('기사를 삭제하시겠습니까?')) updateArticles(articles.filter(a => a.id !== art.id)) }} className="p-2 border rounded hover:bg-red-50 text-red-500 ml-2"><Trash2 size={16}/></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        )}
-
-        {/* 광고 관리 */}
         {activeTab === 'ads' && (
            <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-300">
              <div className="flex border-b mb-6 overflow-x-auto">
@@ -336,7 +348,7 @@ const AdminDashboard: React.FC = () => {
              </div>
              
              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-between">
-               <p className="text-sm text-blue-800 font-medium">광고 영역에 맞게 이미지를 업로드해주세요.</p>
+               <p className="text-sm text-blue-800 font-medium">영역에 적합한 가로/세로 비율의 이미지를 사용해주세요.</p>
                <button onClick={() => { setEditingAd({ type: activeAdSubTab, isVisible: true }); setIsAdModalOpen(true); }} className="bg-blue-900 text-white px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-1">
                  <Plus size={16}/> 광고 추가
                </button>
@@ -353,7 +365,7 @@ const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
                     <div className="p-4 border-t border-gray-100 text-xs">
-                      <span className="text-blue-900 font-bold">Link:</span> {ad.linkUrl}
+                      <span className="text-blue-900 font-bold">연결 링크:</span> {ad.linkUrl}
                     </div>
                   </div>
                 ))}
@@ -361,13 +373,12 @@ const AdminDashboard: React.FC = () => {
            </div>
         )}
 
-        {/* 제보 내역 */}
         {activeTab === 'reports' && (
           <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm animate-in fade-in duration-300">
             <h2 className="text-xl font-bold mb-6">제보 내역 관리</h2>
             <div className="space-y-4">
               {reports.length > 0 ? reports.map(report => (
-                <div key={report.id} className="p-5 border rounded-xl bg-white border-gray-100 shadow-sm">
+                <div key={report.id} className="p-5 border rounded-xl bg-white border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-bold text-lg text-gray-900">{report.title}</h3>
                     <span className="text-[10px] text-gray-400 font-bold bg-gray-50 px-2 py-1 rounded">{report.submittedAt}</span>
@@ -421,7 +432,7 @@ const AdminDashboard: React.FC = () => {
         {isAdModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
             <div className="bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl">
-              <h2 className="text-xl font-bold mb-6">광고 상세 정보</h2>
+              <h2 className="text-xl font-bold mb-6">광고 설정</h2>
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">이미지 URL</label>
