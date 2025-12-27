@@ -5,6 +5,8 @@ import { useApp } from '../store';
 import { Clock, RefreshCw } from 'lucide-react';
 import { TopAd, BottomAd } from '../components/Ads';
 
+const DEFAULT_ARTICLE_IMAGE = 'https://media.istockphoto.com/id/1170028399/vector/white-half-tone-background.jpg?s=612x612&w=0&k=20&c=2L44isbJdJt3LW7yYOhqLLiByWELcujetoXKsx6QVdE=';
+
 const ArticleDetail: React.FC = () => {
   const { id } = useParams();
   const { articles, reporters } = useApp();
@@ -23,12 +25,21 @@ const ArticleDetail: React.FC = () => {
         const url = imgMatch[1];
         return (
           <div key={index} className="my-8 flex justify-center">
-            <img src={url} alt="기사 이미지" className="max-w-full h-auto rounded shadow-md" />
+            <img 
+              src={url} 
+              alt="기사 이미지" 
+              className="max-w-full h-auto rounded shadow-md" 
+              onError={(e) => { e.currentTarget.src = DEFAULT_ARTICLE_IMAGE; }}
+            />
           </div>
         );
       }
       return <span key={index}>{part}</span>;
     });
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = DEFAULT_ARTICLE_IMAGE;
   };
 
   return (
@@ -45,16 +56,15 @@ const ArticleDetail: React.FC = () => {
         </div>
       </header>
 
-      {/* 메인 이미지가 있을 때만 렌더링 */}
-      {article.image && article.image.trim() !== '' && (
-        <div className="mb-10">
-          <img 
-            src={article.image} 
-            alt={article.title} 
-            className="w-full max-h-[500px] object-cover rounded shadow-sm mb-4"
-          />
-        </div>
-      )}
+      {/* 메인 이미지 - 없거나 깨질 경우 대체 이미지 노출 */}
+      <div className="mb-10 bg-gray-50 rounded shadow-sm overflow-hidden">
+        <img 
+          src={article.image && article.image.trim() !== '' ? article.image : DEFAULT_ARTICLE_IMAGE} 
+          alt={article.title} 
+          className="w-full max-h-[600px] object-cover"
+          onError={handleImageError}
+        />
+      </div>
 
       <article className="prose prose-blue max-w-none text-gray-800 leading-relaxed text-lg whitespace-pre-wrap mb-16">
         {renderContent(article.content)}
@@ -73,6 +83,7 @@ const ArticleDetail: React.FC = () => {
               src={reporter.photo} 
               alt={reporter.name} 
               className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm"
+              onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/150?text=Reporter'; }}
             />
             <div>
               <div className="text-xs text-blue-700 font-bold mb-1">{reporter.role}</div>

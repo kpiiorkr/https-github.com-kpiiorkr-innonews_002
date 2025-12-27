@@ -15,6 +15,7 @@ interface AppContextType {
   updateAdminPassword: (newPw: string) => void;
   updateNavCategories: (newCats: string[]) => void;
   addArticle: (article: Article) => void;
+  updateArticles: (articles: Article[]) => void; // 기사 목록 전체 업데이트(순서 변경 등)
   addReport: (report: Report) => void;
   updateAds: (ads: AdConfig[]) => void;
   updateVideos: (videos: Video[]) => void;
@@ -68,6 +69,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [reports, setReports] = useState<Report[]>([]);
 
   const addArticle = (article: Article) => setArticles(prev => [article, ...prev]);
+  const updateArticles = (newArticles: Article[]) => setArticles(newArticles);
   const addReport = (report: Report) => setReports(prev => [report, ...prev]);
   const updateAds = (newAds: AdConfig[]) => setAds(newAds);
   const updateVideos = (newVideos: Video[]) => setVideos(newVideos);
@@ -92,6 +94,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updateAdminPassword,
       updateNavCategories,
       addArticle,
+      updateArticles,
       addReport,
       updateAds,
       updateVideos,

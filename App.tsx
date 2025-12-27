@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import ArticleDetail from './pages/ArticleDetail';
 import CategoryPage from './pages/CategoryPage';
 import ReportPage from './pages/ReportPage';
+import SearchPage from './pages/SearchPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import VideosPage from './pages/VideosPage';
@@ -25,6 +26,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/article/:id" element={<Layout><ArticleDetail /></Layout>} />
       <Route path="/category/:categoryName" element={<Layout><CategoryPage /></Layout>} />
       <Route path="/report" element={<Layout><ReportPage /></Layout>} />
+      <Route path="/search" element={<Layout><SearchPage /></Layout>} />
       <Route path="/videos" element={<Layout><VideosPage /></Layout>} />
       <Route path="/info/:type" element={<Layout><InfoPage /></Layout>} />
       <Route path="/login" element={<Layout><AdminLogin /></Layout>} />

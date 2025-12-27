@@ -43,16 +43,16 @@ export const TopAd: React.FC = () => {
   if (!activeAd) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto mb-8">
-      <div className="w-full bg-gray-100 flex items-center justify-center border border-gray-200 relative group">
-        <a href={activeAd.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-[90px]">
+    <div className="w-full max-w-4xl mx-auto mb-10">
+      <div className="text-center text-[10px] text-gray-400 mb-1 tracking-widest uppercase">Sponsored</div>
+      <div className="w-full bg-gray-50 flex items-center justify-center border border-gray-100 relative group overflow-hidden">
+        <a href={activeAd.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-[120px] md:h-[150px]">
           <img 
             src={activeAd.imageUrl} 
-            alt="Banner Advertisement" 
-            className="w-full h-full object-cover group-hover:opacity-95 transition-opacity"
+            alt="Top Advertisement" 
+            className="w-full h-full object-contain md:object-cover group-hover:opacity-90 transition-opacity"
           />
         </a>
-        <div className="absolute top-0 right-0 bg-white/80 px-1 text-[8px] text-gray-400">AD</div>
       </div>
     </div>
   );
@@ -73,7 +73,7 @@ export const BottomAd: React.FC = () => {
   return (
     <div className="mt-12 mb-12 clear-both block w-full">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center text-[10px] text-gray-400 mb-1 tracking-widest">ADVERTISEMENT</div>
+        <div className="text-center text-[10px] text-gray-400 mb-1 tracking-widest uppercase">Advertisement</div>
         <div className="w-full bg-gray-50 flex items-center justify-center border border-gray-100 relative group overflow-hidden">
           <a href={activeAd.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-[120px] md:h-[150px]">
             <img 

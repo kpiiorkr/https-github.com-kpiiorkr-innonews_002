@@ -6,8 +6,19 @@ import { useApp } from '../store';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { isAdmin, setAdmin, navCategories } = useApp();
   const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -19,7 +30,10 @@ const Header: React.FC = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-6 text-sm text-gray-500">
-            <button className="hover:text-blue-600 flex items-center gap-1">
+            <button 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="hover:text-blue-600 flex items-center gap-1 transition-colors"
+            >
               <Search size={18} /> 검색
             </button>
             {isAdmin ? (
@@ -43,6 +57,25 @@ const Header: React.FC = () => {
           </button>
         </div>
 
+        {/* Search Bar Overlay */}
+        {isSearchOpen && (
+          <div className="py-4 border-b border-gray-100 animate-in slide-in-from-top duration-200">
+            <form onSubmit={handleSearch} className="relative flex items-center">
+              <input 
+                type="text" 
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="검색어를 입력하세요 (제목, 본문)"
+                className="w-full p-3 border border-blue-900 rounded-lg outline-none focus:ring-2 focus:ring-blue-100 pr-12"
+              />
+              <button type="submit" className="absolute right-3 p-2 text-blue-900 hover:bg-blue-50 rounded-full">
+                <Search size={20} />
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Navigation */}
         <nav className={`md:flex ${isMenuOpen ? 'block' : 'hidden'} bg-white`}>
           <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 py-3 font-medium text-gray-700">
@@ -58,7 +91,7 @@ const Header: React.FC = () => {
               </li>
             ))}
             <li><Link to="/videos" className="hover:text-blue-600 transition-colors block py-2 md:py-0" onClick={() => setIsMenuOpen(false)}>영상</Link></li>
-            <li><Link to="/report" className="hover:text-blue-600 transition-colors block py-2 md:py-0 font-bold" onClick={() => setIsMenuOpen(false)}>제보하기</Link></li>
+            <li><Link to="/report" className="hover:text-blue-600 transition-colors block py-2 md:py-0 font-bold text-red-600" onClick={() => setIsMenuOpen(false)}>제보하기</Link></li>
           </ul>
         </nav>
       </div>
