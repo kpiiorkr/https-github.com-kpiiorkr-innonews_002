@@ -6,6 +6,8 @@ export interface Reporter {
   name: string;
   photo: string;
   role: string;
+  // Added optional email property to resolve property access errors
+  email?: string;
 }
 
 export interface Article {
@@ -31,7 +33,7 @@ export interface Video {
 
 export interface AdConfig {
   id: string;
-  type: 'sidebar' | 'top' | 'popup';
+  type: 'sidebar' | 'top' | 'popup' | 'bottom';
   imageUrl: string;
   linkUrl: string;
   width?: string;
